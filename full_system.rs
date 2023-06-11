@@ -27,19 +27,19 @@ fn accn(p: &[[f64;3]], gm: &[f64], a: &mut [[f64;3]]) -> () {
     }
 }
 
-const w0:f64 = -1.702414383919315268;
-const w1:f64 = 1.351207191959657634;
-const c:[f64;4] = [w1/2.0, (w0+w1)/2.0, (w0+w1)/2.0, w1/2.0];
-const d:[f64;3] = [w1, w0, w1];
+const W0:f64 = -1.702414383919315268;
+const W1:f64 = 1.351207191959657634;
+const C:[f64;4] = [W1/2.0, (W0+W1)/2.0, (W0+W1)/2.0, W1/2.0];
+const D:[f64;3] = [W1, W0, W1];
 const GSCALE:f64 = 2.22972472095e-15;
 
-fn integrate(p: &mut [[f64;3]], v: &mut [[f64;3]], gm: &[f64], a: &mut [[f64;3]], mut accn: impl FnMut(&[[f64;3]],&[f64], &mut [[f64;3]])-> (), dt: f64) -> () {
-    for (cc,dd) in zip(c,d)  {
+fn integrate(p: &mut [[f64;3]], v: &mut [[f64;3]], gm: &[f64], a: &mut [[f64;3]], accn: impl Fn(&[[f64;3]],&[f64], &mut [[f64;3]])-> (), dt: f64) -> () {
+    for (cc,dd) in zip(C,D)  {
         p.iter_mut().zip(v.iter()).for_each( |(x,y)| zip(x,y).for_each(|(x,y)| *x += *y*cc*dt));
         accn(p, gm, a);
         v.iter_mut().zip(a.iter()).for_each( |(x,y)| zip(x,y).for_each(|(x,y)| *x += *y*dd*dt));
     }
-    p.iter_mut().zip(v.iter()).for_each( |(x,y)| zip(x,y).for_each(|(x,y)| *x += *y*c[3]*dt));    
+    p.iter_mut().zip(v.iter()).for_each( |(x,y)| zip(x,y).for_each(|(x,y)| *x += *y*C[3]*dt));    
 }
 
 
@@ -76,7 +76,7 @@ fn main() {
     let max_t = 365.25*200.0;
     let mut dist:f64 = zip(p[10],p[0]).map(|(x,y)| (x-y)*(x-y)).sum();
     let mut olddist = dist;
-    let mut oldolddist = dist;
+    let mut oldolddist ;
 
 
     while t<max_t {
