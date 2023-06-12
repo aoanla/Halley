@@ -1,6 +1,7 @@
 #Note, we *need* StaticArrays here to make this approach C performance - the built in dynamic arrays incur a 10x performance penalty even with preallocation etc
 
 using StaticArrays
+using LinearAlgebra
 
 p = @MMatrix [  2.950832139557744e-3  -5.425470573959765e-3  -7.383386124694714e-5 ;
                       -3.332497263005759 4.112363636591643 5.891307575840340e-2 ;
@@ -45,12 +46,12 @@ const d = (w1, w0, w1)
 
 function accns!(psn,Gm,acn) 
            a .= 0.0
-           d = @MArray [0.0,0.0,0.0]
+           d = @MVector [0.0,0.0,0.0]
            lst = size(psn)[1]
            for i in 1:lst
                for j in i+1:lst
                    d .= psn[i,:] .- psn[j,:]
-                   n::Float64 = sum(d .^ 2)
+                   n::Float64 = d ⋅ d #sum(d .^ 2) better to make this explicit
                    d ./= (n*sqrt(n))
                    acn[j,:] .+= Gm[i]*d
                    acn[i,:] .-= Gm[j]*d
