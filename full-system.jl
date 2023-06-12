@@ -2,6 +2,7 @@
 
 using StaticArrays
 using LinearAlgebra
+using Dates
 
 p = @MMatrix [  2.950832139557744e-3  -5.425470573959765e-3  -7.383386124694714e-5 ;
                       -3.332497263005759 4.112363636591643 5.891307575840340e-2 ;
@@ -74,6 +75,7 @@ function integrate!(posns, velocities, Gmasses, acns, accn::Function, dt)
 
 function sim(p,v,a,dt,max_t)
            t = 0
+           startdate = Dates.Date("1682-07-31") 
            lst = size(p)[1]
            dist = sum( (p[lst,:] .- p[1,:]) .^ 2 )
            olddist = dist
@@ -85,7 +87,7 @@ function sim(p,v,a,dt,max_t)
                dist = sum( (p[lst,:] .- p[1,:]) .^ 2 )
                
                if (oldolddist > olddist) && (dist > olddist)
-                   println("Perihelion at $t")
+                   println("Perihelion at $t, ", startdate + Dates.Day(floor(Int,t)) )
                end
                
                t += dt
