@@ -75,7 +75,7 @@ function integrate!(posns, velocities, Gmasses, acns, accn::Function, dt)
 
 function sim(p,v,a,dt,max_t)
            t = 0
-           startdate = Dates.Date("1682-07-31") 
+           startdate = Dates.Date("1682-08-31") 
            lst = size(p)[1]
            dist = sum( (p[lst,:] .- p[1,:]) .^ 2 )
            olddist = dist
