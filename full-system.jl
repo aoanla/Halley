@@ -87,7 +87,7 @@ function sim(p,v,a,dt,max_t)
                dist = sum( (p[lst,:] .- p[1,:]) .^ 2 )
                
                if (oldolddist > olddist) && (dist > olddist)
-                   println("Perihelion at $t, ", startdate + Dates.Day(floor(Int,t)) )
+                   println("Perihelion at ", t-dt, ", ", startdate + Dates.Day(floor(Int,t-dt)) )
                end
                
                t += dt
