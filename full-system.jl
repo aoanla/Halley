@@ -76,18 +76,18 @@ function integrate!(posns, velocities, Gmasses, acns, accn::Function, dt)
 function sim(p,v,a,dt,max_t)
            t = 0
            startdate = Dates.Date("1682-08-31") 
-           lst = size(p)[1]
-           dist = sum( (p[lst,:] .- p[1,:]) .^ 2 )
+           #lst = size(p)[1]
+           dist = sum( (p[end,:] .- p[1,:]) .^ 2 )
            olddist = dist
            while t < max_t
                oldolddist = olddist
                olddist = dist
                
                integrate!(p,v,Gm,a,accns!, dt)
-               dist = sum( (p[lst,:] .- p[1,:]) .^ 2 )
+               dist = sum( (p[end,:] .- p[1,:]) .^ 2 )
                
                if (oldolddist > olddist) && (dist > olddist)
-                   println("Perihelion at ", t-dt, ", ", startdate + Dates.Day(floor(Int,t-dt)) )
+                   println("Perihelion at $(t-dt) ($(startdate + Dates.Day(floor(Int,t-dt)))) )
                end
                
                t += dt
